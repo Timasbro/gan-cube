@@ -81,6 +81,37 @@ async function handleGyroEvent(event: GanCubeEvent) {
   }
 }
 
+function generateScramble() {
+
+  // Possible Letters
+  var array = new Array(" U", " D", " R", " L", " F", " B")
+
+  // Possible switches
+  var switches = ["", "\'", "2"]; 
+
+  var array2 = new Array(); // The Scramble.
+
+  var last = ''; // Last used letter
+
+  var random = 0;
+
+  for (var i = 0; i < 20; i++) {
+      // the following loop runs until the last one 
+      // letter is another of the new one
+      do {
+         random = Math.floor(Math.random() * array.length);
+      } while (last == array[random]) 
+
+  // assigns the new one as the last one
+  last = array[random];
+
+  // the scramble item is the letter
+  // with (or without) a switch
+  var scrambleItem = array[random] + switches[parseInt(Math.random()*switches.length)];
+
+  array2.push(scrambleItem); // Get letters in random order in the array.
+  }
+
 async function handleMoveEvent(event: GanCubeEvent) {
   if (event.type == "MOVE") {
     if (timerState == "READY") {
@@ -173,6 +204,20 @@ $('#connect').on('click', async () => {
     $('#connect').html('Disconnect');
   }
 });
+
+$('#reset-scramble').on('click', async () => {
+  generateScramble();
+  var scramble = "Scramble: ";
+
+  // Appends all scramble items to scramble variable
+  for(i=0; i<20; i++) {
+     scramble += array2[i];
+  }
+ $('#scramble').val(scramble);
+});
+
+
+
 
 var timerState: "IDLE" | "READY" | "RUNNING" | "STOPPED" = "IDLE";
 
